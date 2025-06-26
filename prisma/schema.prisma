@@ -18,7 +18,7 @@ model User {
   id         String    @id @default(uuid())
   name       String
   surname    String
-  photo      String
+  photo      String?
   email      String
   password   String
   phone      String
@@ -110,8 +110,8 @@ model CreditCard {
   name        String
   flag        String
   limit       Decimal
-  closing_day Int
-  due_data    Int
+  closing_day DateTime
+  due_data    DateTime
   is_main     Boolean
   wallet_id   String
   Expense     Expense[]
