@@ -28,15 +28,24 @@ export class AuthService {
     });
 
     if (!user?.email) {
-      throw new NotFoundException("Usuário não cadastrado");
+      throw new NotFoundException('Usuário não cadastrado');
     }
 
     const passwordMatch = await compare(data.password, user.password);
     if (!passwordMatch) {
-      throw new UnauthorizedException("Senha incorreta");
+      throw new UnauthorizedException('Senha incorreta');
     }
 
-    const payload = { sub: user.id, username: user.name, email: user.email };
+    const payload = {
+      id: user.id,
+      name: user.name,
+      surname: user.surname,
+      email: user.email,
+      phone: user.phone,
+      photo: user.photo,
+      created_at: user.created_at,
+      updated_at: user.updated_at,
+    };
 
     return {
       user: {

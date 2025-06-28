@@ -7,6 +7,8 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 
@@ -17,6 +19,7 @@ import { AuthDto } from './dto/auth.dto';
 
 // Service
 import { AuthService } from './auth/auth.service';
+import { AuthGuard } from './auth/auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -35,7 +38,14 @@ export class UsersController {
   @Post('signin')
   async signIn(@Body() signInDto: AuthDto) {
     const user = await this.authService.signIn(signInDto);
+
     return { msg: 'Autheticado com sucesso!', user };
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('me')
+  getProfile(@Request() req) {
+    return { msg: 'Usuário autenticado', user: req.user };
   }
 
   @Get()
