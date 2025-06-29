@@ -10,9 +10,10 @@ import { UsersController } from './users.controller';
 // Module
 import { DatabaseModule } from 'src/database/database.module';
 import { AuthModule } from './auth/auth.module';
+import { MailModule } from 'src/mail/mail.module';
 
 @Module({
-  imports: [forwardRef(() => AuthModule), DatabaseModule],
+  imports: [forwardRef(() => AuthModule), DatabaseModule, MailModule],
   controllers: [UsersController],
   providers: [UsersService],
 })

@@ -9,6 +9,7 @@ import {
   Delete,
   UseGuards,
   Request,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 
@@ -40,6 +41,11 @@ export class UsersController {
     const user = await this.authService.signIn(signInDto);
 
     return { msg: 'Autheticado com sucesso!', user };
+  }
+
+  @Get('verify')
+  async verifyEmail(@Query('token') token: string) {
+    return (await this.usersService.verifyEmail(token));
   }
 
   @UseGuards(AuthGuard)
