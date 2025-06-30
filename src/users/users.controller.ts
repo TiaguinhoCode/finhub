@@ -7,6 +7,9 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Request,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 
@@ -17,6 +20,7 @@ import { AuthDto } from './dto/auth.dto';
 
 // Service
 import { AuthService } from './auth/auth.service';
+import { AuthGuard } from './auth/auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -35,26 +39,42 @@ export class UsersController {
   @Post('signin')
   async signIn(@Body() signInDto: AuthDto) {
     const user = await this.authService.signIn(signInDto);
-    return { msg: 'Autheticado com sucesso!', user };
+
+    return { msg: 'Login realizado com sucesso', user };
   }
 
+  @Get('verify')
+  async verifyEmail(@Query('token') token: string) {
+    return await this.usersService.verifyEmail(token);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('me')
+  getProfile(@Request() req) {
+    return { msg: 'ok', user: req.user };
+  }
+
+  @UseGuards(AuthGuard)
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  async findOne(@Query('id') id: string) {
+    const user = await this.usersService.findOne(id);
+
+    return { msg: 'ok', user };
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  @UseGuards(AuthGuard)
+  @Patch()
+  async update(@Query('id') id: string, @Body() dto: UpdateUserDto) {
+    const user = await this.usersService.update(id, dto);
+
+    return { msg: 'Alteração feita com sucesso!', user };
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
-  }
+  @UseGuards(AuthGuard)
+  @Delete()
+  async remove(@Query('id') id: string) {
+    const user = await this.usersService.remove(id);
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+    return { msg: 'Usuário removido com sucesso!', user };
   }
 }

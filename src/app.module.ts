@@ -7,10 +7,11 @@ import { AppController } from './app.controller';
 // Module
 import { UsersModule } from './users/users.module';
 import { DatabaseModule } from './database/database.module';
+import { MailService } from './mail/mail.service';
 
 @Module({
   imports: [UsersModule, DatabaseModule],
   controllers: [AppController],
-  providers: [],
+  providers: [MailService],
 })
 export class AppModule {}
