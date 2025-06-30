@@ -1,5 +1,10 @@
 // Nest
-import { BadRequestException, Injectable, Query } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  Query,
+} from '@nestjs/common';
 
 // Dto
 import { CreateUserDto } from './dto/create-user.dto';
@@ -99,12 +104,16 @@ export class UsersService {
     return { msg: 'E‑mail verificado com sucesso!' };
   }
 
-  findAll() {
-    return `This action returns all users`;
-  }
+  async findOne(id: string): Promise<User> {
+    const user = await this.client.user.findUnique({
+      where: { id: id },
+      omit: { password: true },
+    });
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+    if (!user)
+      throw new NotFoundException(`Usuário com id ${id} não encontrado`);
+
+    return user;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

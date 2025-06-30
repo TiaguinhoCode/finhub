@@ -45,7 +45,7 @@ export class UsersController {
 
   @Get('verify')
   async verifyEmail(@Query('token') token: string) {
-    return (await this.usersService.verifyEmail(token));
+    return await this.usersService.verifyEmail(token);
   }
 
   @UseGuards(AuthGuard)
@@ -54,19 +54,20 @@ export class UsersController {
     return { msg: 'Usuário autenticado', user: req.user };
   }
 
+  @UseGuards(AuthGuard)
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  async findOne(@Query('id') id: string) {
+    const user = await this.usersService.findOne(id);
+
+    return { msg: 'ok', user };
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
-  }
+  @UseGuards(AuthGuard)
+  @Patch()
+  async update(@Query('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    const user = this.usersService.update(+id, updateUserDto);
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+    return { msg: 'Alteração feita com sucesso!', user };
   }
 
   @Delete(':id')
