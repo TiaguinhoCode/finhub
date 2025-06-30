@@ -40,7 +40,7 @@ export class UsersController {
   async signIn(@Body() signInDto: AuthDto) {
     const user = await this.authService.signIn(signInDto);
 
-    return { msg: 'Autheticado com sucesso!', user };
+    return { msg: 'Login realizado com sucesso', user };
   }
 
   @Get('verify')
@@ -51,7 +51,7 @@ export class UsersController {
   @UseGuards(AuthGuard)
   @Get('me')
   getProfile(@Request() req) {
-    return { msg: 'Usuário autenticado', user: req.user };
+    return { msg: 'ok', user: req.user };
   }
 
   @UseGuards(AuthGuard)
@@ -64,14 +64,17 @@ export class UsersController {
 
   @UseGuards(AuthGuard)
   @Patch()
-  async update(@Query('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    const user = this.usersService.update(+id, updateUserDto);
+  async update(@Query('id') id: string, @Body() dto: UpdateUserDto) {
+    const user = await this.usersService.update(id, dto);
 
     return { msg: 'Alteração feita com sucesso!', user };
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  @UseGuards(AuthGuard)
+  @Delete()
+  async remove(@Query('id') id: string) {
+    const user = await this.usersService.remove(id);
+
+    return { msg: 'Usuário removido com sucesso!', user };
   }
 }

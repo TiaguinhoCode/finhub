@@ -25,7 +25,7 @@ model User {
   checked       Boolean?
   validation_id String?   @unique @default(uuid())
   created_at    DateTime? @default(now())
-  updated_at    DateTime? @default(now())
+  updated_at    DateTime? @updatedAt
   Wallets       Wallet[]
 
   @@map("user")

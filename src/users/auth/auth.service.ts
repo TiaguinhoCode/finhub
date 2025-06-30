@@ -43,6 +43,8 @@ export class AuthService {
       email: user.email,
       phone: user.phone,
       photo: user.photo,
+      checked: user.checked,
+      validation_id: user.validation_id,
       created_at: user.created_at,
       updated_at: user.updated_at,
     };
@@ -55,6 +57,8 @@ export class AuthService {
         email: user.email,
         phone: user.phone,
         photo: user.photo,
+        checked: user.checked,
+        validation_id: user.validation_id,
         created_at: user.created_at,
         updated_at: user.updated_at,
       },

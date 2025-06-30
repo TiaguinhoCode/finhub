@@ -116,11 +116,37 @@ export class UsersService {
     return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const exists = await this.client.user.findUnique({ where: { id } });
+
+    if (!exists) throw new NotFoundException('Usuário não encontrado');
+
+    const data: any = {
+      ...updateUserDto,
+      ...(updateUserDto.password
+        ? { password: await hash(updateUserDto.password, 10) }
+        : {}),
+    };
+
+    const user = await this.client.user.update({
+      where: { id },
+      data,
+      omit: { password: true },
+    });
+
+    return user;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    const exists = await this.client.user.findUnique({ where: { id } });
+
+    if (!exists) throw new NotFoundException('Usuário não encontrado');
+
+    const user = await this.client.user.delete({
+      where: { id: id },
+      omit: { password: true },
+    });
+
+    return user;
   }
 }
