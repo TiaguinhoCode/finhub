@@ -8,12 +8,11 @@ import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 
 // Module
-import { DatabaseModule } from 'src/database/database.module';
 import { AuthModule } from './auth/auth.module';
 import { MailModule } from 'src/mail/mail.module';
 
 @Module({
-  imports: [forwardRef(() => AuthModule), DatabaseModule, MailModule],
+  imports: [ MailModule],
   controllers: [UsersController],
   providers: [UsersService],
 })
