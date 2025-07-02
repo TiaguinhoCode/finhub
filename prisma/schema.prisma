@@ -89,10 +89,12 @@ model Category {
   name       String
   color      String
   icons      String
+  user_id    String?
   created_at DateTime? @default(now())
   updated_at DateTime? @default(now())
-  Expense    Expense[]
-  Revenue    Revenue[]
+
+  Expense Expense[]
+  Revenue Revenue[]
 
   @@map("category")
 }

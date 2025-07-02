@@ -8,6 +8,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 
 // Service
@@ -26,15 +27,17 @@ export class CategoryController {
 
   @UseGuards(AuthGuard)
   @Post()
-  async create(@Body() createCategoryDto: CreateCategoryDto) {
-    const category = await this.categoryService.create(createCategoryDto);
+  async create(@Body() data: CreateCategoryDto) {
+    const category = await this.categoryService.create(data);
 
     return { msg: 'Categoria criada com sucesso', category };
   }
 
   @Get()
-  findAll() {
-    return this.categoryService.findAll();
+  async findAll(@Query('user_id') user_id: string) {
+    const category = await this.categoryService.findAll(user_id);
+
+    return { msg: 'Ok', category };
   }
 
   @Get(':id')

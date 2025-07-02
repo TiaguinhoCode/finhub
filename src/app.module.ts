@@ -10,7 +10,6 @@ import { DatabaseModule } from './database/database.module';
 import { MailService } from './mail/mail.service';
 import { WalletsModule } from './wallets/wallets.module';
 import { AuthModule } from './users/auth/auth.module';
-import { RevenuesModule } from './revenues/revenues.module';
 import { CategoryModule } from './category/category.module';
 
 @Module({
@@ -19,7 +18,6 @@ import { CategoryModule } from './category/category.module';
     DatabaseModule,
     WalletsModule,
     forwardRef(() => AuthModule),
-    RevenuesModule,
     CategoryModule,
   ],
   controllers: [AppController],
