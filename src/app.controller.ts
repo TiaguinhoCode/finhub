@@ -1,12 +1,16 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+// Nest
+import { Controller, Get, Request } from '@nestjs/common';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
-
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  getInfo(@Request() req) {
+    const url = `${req.protocol}://${req.get('host')}`;
+
+    return {
+      docs: url,
+      version: 1,
+      health: true,
+    };
   }
 }
