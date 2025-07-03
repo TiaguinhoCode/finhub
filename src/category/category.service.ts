@@ -47,15 +47,32 @@ export class CategoryService {
     return category;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  async findOne(id: string) {
+    const category = await this.client.category.findUnique({
+      where: { id },
+    });
+
+    if (!category) throw new NotFoundException('Categoria não existe');
+
+    return category;
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  async update(id: string, data: UpdateCategoryDto) {
+    const category = await this.client.category.update({
+      where: { id },
+      data,
+    });
+
+    if (!category) throw new BadRequestException('Categoria não existe');
+
+    return category;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(id: string) {
+    const category = await this.client.category.delete({ where: { id } });
+
+    if (!category) throw new BadRequestException('Categoria não existe');
+
+    return category;
   }
 }
