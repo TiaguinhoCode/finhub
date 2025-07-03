@@ -1,20 +1,16 @@
+// Nest
 import { NestFactory } from '@nestjs/core';
-import { HttpAdapterHost } from '@nestjs/core';
-import { AppModule } from '../dist/app.module';
+
+// Module
+import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 
-let app: any;
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('v1');
 
-export default async function handler(req, res) {
-  if (!app) {
-    const nestApp = await NestFactory.create(AppModule);
-    nestApp.setGlobalPrefix('v1');
-    nestApp.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-    await nestApp.init();
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
-    const adapterHost = nestApp.get(HttpAdapterHost);
-    app = adapterHost.httpAdapter.getInstance();
-  }
-
-  app(req, res);
+  await app.listen(process.env.PORT ?? 3000);
 }
+bootstrap();
