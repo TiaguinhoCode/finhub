@@ -1,5 +1,5 @@
 // Nest
-import { forwardRef, Module } from '@nestjs/common'; //@nestjs/common'
+import { forwardRef, Module } from '@nestjs/common';
 
 // Controller
 import { AppController } from './app.controller';
