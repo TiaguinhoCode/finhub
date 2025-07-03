@@ -9,5 +9,5 @@
       "headers": { "Access-Control-Allow-Origin": "*" }
     }
   ],
-  "outputDirecctory": "dist"
+  "outputDirectory": "dist"
 }
