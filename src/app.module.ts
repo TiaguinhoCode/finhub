@@ -11,6 +11,7 @@ import { MailService } from './mail/mail.service';
 import { WalletsModule } from './wallets/wallets.module';
 import { AuthModule } from './users/auth/auth.module';
 import { CategoryModule } from './category/category.module';
+import { RevenuesModule } from './revenues/revenues.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { CategoryModule } from './category/category.module';
     WalletsModule,
     forwardRef(() => AuthModule),
     CategoryModule,
+    RevenuesModule,
   ],
   controllers: [AppController],
   providers: [MailService],
