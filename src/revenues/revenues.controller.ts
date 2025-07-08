@@ -29,8 +29,24 @@ export class RevenuesController {
   }
 
   @Get()
-  findAll() {
-    return this.revenuesService.findAll();
+  async findAll(
+    @Query('wallet_id') wallet_id?: string,
+    @Query('realease_start') release_start?: string,
+    @Query('realease_end') release_end?: string,
+    @Query('due_start') due_start?: string,
+    @Query('due_end') due_end?: string,
+    @Query('paid') paid?: string,
+  ) {
+    const revenues = await this.revenuesService.findAll({
+      wallet_id,
+      release_start,
+      release_end,
+      due_start,
+      due_end,
+      paid,
+    });
+
+    return { msg: 'Receitas encontradas com sucesso!', revenues };
   }
 
   @Get(':id')
