@@ -52,7 +52,11 @@ export class CategoryController {
 
   @UseGuards(AuthGuard)
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() data: UpdateCategoryDto) {
+  async update(
+    @Param('id') id: string,
+    @Request() req,
+    @Body() data: UpdateCategoryDto,
+  ) {
     const category = await this.categoryService.update(id, data);
 
     return { msg: 'Alteração feita com sucesso!', category };

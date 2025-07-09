@@ -72,7 +72,7 @@ export class CategoryService {
     return category;
   }
 
-  async update(id: string, data: UpdateCategoryDto) {
+  async update(id: string, user_id, data: UpdateCategoryDto) {
     const category = await this.client.category.update({
       where: { id },
       data,
