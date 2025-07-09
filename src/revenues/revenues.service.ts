@@ -117,11 +117,15 @@ export class RevenuesService {
     return revenues;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} revenue`;
+  async findOne(id: string) {
+    const revenue = await this.client.revenue.findFirst({ where: { id } });
+
+    if (!revenue) throw new BadRequestException('Receita não encontrada');
+
+    return revenue;
   }
 
-  update(id: number, updateRevenueDto: UpdateRevenueDto) {
+  update(id: string, data: UpdateRevenueDto) {
     return `This action updates a #${id} revenue`;
   }
 

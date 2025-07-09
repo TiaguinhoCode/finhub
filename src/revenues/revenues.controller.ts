@@ -50,13 +50,17 @@ export class RevenuesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.revenuesService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const revenue = await this.revenuesService.findOne(id);
+
+    return { msg: 'ok', revenue };
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRevenueDto: UpdateRevenueDto) {
-    return this.revenuesService.update(+id, updateRevenueDto);
+  async update(@Param('id') id: string, @Body() data: UpdateRevenueDto) {
+    const revenue = await this.revenuesService.update(id, data);
+
+    return { msg: 'Alteração feita com sucesso!', revenue };
   }
 
   @Delete(':id')
