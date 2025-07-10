@@ -8,10 +8,14 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 
 // Service
 import { RevenuesService } from './revenues.service';
+
+// Middleware
+import { AuthGuard } from 'src/users/auth/auth.guard';
 
 // Tipagem
 import { CreateRevenueDto } from './dto/create-revenue.dto';
@@ -21,6 +25,7 @@ import { UpdateRevenueDto } from './dto/update-revenue.dto';
 export class RevenuesController {
   constructor(private readonly revenuesService: RevenuesService) {}
 
+  @UseGuards(AuthGuard)
   @Post()
   async create(@Body() data: CreateRevenueDto, @Query('until') until?: Date) {
     const revenue = await this.revenuesService.create(data, until);
@@ -36,6 +41,7 @@ export class RevenuesController {
     @Query('due_start') due_start?: string,
     @Query('due_end') due_end?: string,
     @Query('paid') paid?: string,
+    @Query('category_id') category_id?: string,
   ) {
     const revenues = await this.revenuesService.findAll({
       wallet_id,
@@ -44,6 +50,7 @@ export class RevenuesController {
       due_start,
       due_end,
       paid,
+      category_id,
     });
 
     return { msg: 'Receitas encontradas com sucesso!', revenues };

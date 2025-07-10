@@ -72,18 +72,25 @@ export class CategoryService {
     return category;
   }
 
-  async update(id: string, user_id, data: UpdateCategoryDto) {
-    const category = await this.client.category.update({
-      where: { id },
-      data,
+  async update(id: string, user_id: string, data: UpdateCategoryDto) {
+    const categoryExists = await this.client.category.findFirst({
+      where: { AND: [{ id }, { user_id }] },
     });
 
-    if (!category) throw new BadRequestException('Categoria não existe');
+    if (!categoryExists) throw new BadRequestException('Categoria não existe');
+
+    const category = await this.client.category.update({ where: { id }, data });
 
     return category;
   }
 
-  async remove(id: string) {
+  async remove(id: string, user_id: string) {
+    const categoryExists = await this.client.category.findFirst({
+      where: { AND: [{ id }, { user_id }] },
+    });
+
+    if (!categoryExists) throw new BadRequestException('Categoria não existe');
+
     const category = await this.client.category.delete({ where: { id } });
 
     if (!category) throw new BadRequestException('Categoria não existe');

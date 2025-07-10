@@ -77,26 +77,36 @@ export class RevenuesService {
     due_start?: string;
     due_end?: string;
     paid?: string;
+    category_id?: string;
   }) {
-    const { wallet_id, release_start, release_end, due_start, due_end, paid } =
-      filters;
+    const {
+      wallet_id,
+      release_start,
+      release_end,
+      due_start,
+      due_end,
+      paid,
+      category_id,
+    } = filters;
 
     const filterPaid =
       paid === 'true' ? true : paid === 'false' ? false : undefined;
 
     if (
       !wallet_id &&
+      !category_id &&
       (!release_start || !release_end) &&
       (!due_start || !due_end)
     ) {
       throw new BadRequestException(
-        'Informe wallet_id ou user_id ou intervalo em release ou due',
+        'Informe wallet_id ou user_id ou intervalo em release ou due ou categoria id',
       );
     }
 
     const where: any = {};
 
     if (wallet_id) where.wallet_id = wallet_id;
+    if (category_id) where.category_id = wallet_id;
     if (paid) where.paid = filterPaid;
     if (release_start || release_end) {
       where.realease_date = {};
@@ -120,12 +130,14 @@ export class RevenuesService {
   async findOne(id: string) {
     const revenue = await this.client.revenue.findFirst({ where: { id } });
 
-    if (!revenue) throw new BadRequestException('Receita não encontrada');
-
     return revenue;
   }
 
-  update(id: string, data: UpdateRevenueDto) {
+  async update(id: string, data: UpdateRevenueDto) {
+    const revenue = await this.client.revenue.update({ where: { id }, data });
+
+    if (!revenue) throw new BadRequestException('Receita não econtrada');
+
     return `This action updates a #${id} revenue`;
   }
 

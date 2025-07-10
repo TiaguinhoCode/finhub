@@ -9,6 +9,7 @@ import {
   Delete,
   UseGuards,
   Query,
+  Req,
 } from '@nestjs/common';
 
 // Service
@@ -25,24 +26,24 @@ export class WalletsController {
 
   @UseGuards(AuthGuard)
   @Post()
-  async create(@Body() createWalletDto: CreateWalletDto) {
-    const wallet = await this.walletsService.create(createWalletDto);
+  async create(@Req() req, @Body() data: CreateWalletDto) {
+    const wallet = await this.walletsService.create(req.user.id, data);
 
     return { msg: 'Carteira criado com sucesso', wallet };
   }
 
   @UseGuards(AuthGuard)
   @Get()
-  async findAll(@Query('user_id') user_id: string) {
-    const wallets = await this.walletsService.findAll(user_id);
+  async findAll(@Req() req) {
+    const wallets = await this.walletsService.findAll(req.user.id);
 
     return { msg: 'ok', wallets };
   }
 
   @UseGuards(AuthGuard)
   @Get(':id')
-  async findOne(@Param('id') wallet_id: string) {
-    const wallet = await this.walletsService.findOne(wallet_id);
+  async findOne(@Param('id') wallet_id: string, @Req() req) {
+    const wallet = await this.walletsService.findOne(wallet_id, req.user.id);
 
     return { msg: 'ok', wallet };
   }
@@ -51,17 +52,22 @@ export class WalletsController {
   @Patch(':id')
   async update(
     @Param('id') wallet_id: string,
-    @Body() updateWalletDto: UpdateWalletDto,
+    @Req() req,
+    @Body() data: UpdateWalletDto,
   ) {
-    const wallet = await this.walletsService.update(wallet_id, updateWalletDto);
+    const wallet = await this.walletsService.update(
+      wallet_id,
+      req.user.id,
+      data,
+    );
 
     return { msg: 'Alteração feita com sucesso!', wallet };
   }
 
   @UseGuards(AuthGuard)
   @Delete(':id')
-  async remove(@Param('id') wallet_id: string) {
-    const wallet = await this.walletsService.remove(wallet_id);
+  async remove(@Param('id') wallet_id: string, @Req() req) {
+    const wallet = await this.walletsService.remove(wallet_id, req.user.id);
 
     return { msg: 'Carteira removido com sucesso!', wallet };
   }

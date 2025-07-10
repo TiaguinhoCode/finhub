@@ -57,15 +57,15 @@ export class CategoryController {
     @Request() req,
     @Body() data: UpdateCategoryDto,
   ) {
-    const category = await this.categoryService.update(id, data);
+    const category = await this.categoryService.update(id, req.user.id, data);
 
     return { msg: 'Alteração feita com sucesso!', category };
   }
 
   @UseGuards(AuthGuard)
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    const category = await this.categoryService.remove(id);
+  async remove(@Request() req, @Param('id') id: string) {
+    const category = await this.categoryService.remove(id, req.user.id);
 
     return { msg: 'Category removida com sucesso!', category };
   }

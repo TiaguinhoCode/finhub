@@ -7,7 +7,4 @@ export class CreateWalletDto {
 
   @IsNotEmpty({ message: 'Valor não pode estar vazio' })
   value: number;
-
-  @IsNotEmpty({ message: 'ID do usuário não pode estar vazio' })
-  user_id: string;
 }
