@@ -9,6 +9,7 @@ import {
   Delete,
   UseGuards,
   Query,
+  Request,
 } from '@nestjs/common';
 
 // Service
@@ -27,36 +28,44 @@ export class CategoryController {
 
   @UseGuards(AuthGuard)
   @Post()
-  async create(@Body() data: CreateCategoryDto) {
-    const category = await this.categoryService.create(data);
+  async create(@Request() req, @Body() data: CreateCategoryDto) {
+    const category = await this.categoryService.create(req.user.id, data);
 
     return { msg: 'Categoria criada com sucesso', category };
   }
 
+  @UseGuards(AuthGuard)
   @Get()
-  async findAll(@Query('user_id') user_id: string) {
-    const category = await this.categoryService.findAll(user_id);
+  async findAll(@Request() req) {
+    const category = await this.categoryService.findAll(req.user.id);
 
     return { msg: 'Ok', category };
   }
 
+  @UseGuards(AuthGuard)
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    const category = await this.categoryService.findOne(id);
+  async findOne(@Param('id') id: string, @Request() req) {
+    const category = await this.categoryService.findOne(id, req.user.id);
 
     return { msg: 'ok', category };
   }
 
+  @UseGuards(AuthGuard)
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() data: UpdateCategoryDto) {
-    const category = await this.categoryService.update(id, data);
+  async update(
+    @Param('id') id: string,
+    @Request() req,
+    @Body() data: UpdateCategoryDto,
+  ) {
+    const category = await this.categoryService.update(id, req.user.id, data);
 
     return { msg: 'Alteração feita com sucesso!', category };
   }
 
+  @UseGuards(AuthGuard)
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    const category = await this.categoryService.remove(id);
+  async remove(@Request() req, @Param('id') id: string) {
+    const category = await this.categoryService.remove(id, req.user.id);
 
     return { msg: 'Category removida com sucesso!', category };
   }
