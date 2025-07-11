@@ -12,6 +12,7 @@ import { WalletsModule } from './wallets/wallets.module';
 import { AuthModule } from './users/auth/auth.module';
 import { CategoryModule } from './category/category.module';
 import { RevenuesModule } from './revenues/revenues.module';
+import { ExpensesModule } from './expenses/expenses.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { RevenuesModule } from './revenues/revenues.module';
     forwardRef(() => AuthModule),
     CategoryModule,
     RevenuesModule,
+    ExpensesModule,
   ],
   controllers: [AppController],
   providers: [MailService],
