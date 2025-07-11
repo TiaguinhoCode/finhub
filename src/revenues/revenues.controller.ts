@@ -9,6 +9,7 @@ import {
   Delete,
   Query,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 
 // Service
@@ -27,14 +28,20 @@ export class RevenuesController {
 
   @UseGuards(AuthGuard)
   @Post()
-  async create(@Body() data: CreateRevenueDto, @Query('until') until?: Date) {
-    const revenue = await this.revenuesService.create(data, until);
+  async create(
+    @Request() req,
+    @Body() data: CreateRevenueDto,
+    @Query('until') until?: Date,
+  ) {
+    const revenue = await this.revenuesService.create(data, req.user.id, until);
 
     return { msg: 'Receita criada com sucesso', revenue };
   }
 
+  @UseGuards(AuthGuard)
   @Get()
   async findAll(
+    @Request() req,
     @Query('wallet_id') wallet_id?: string,
     @Query('realease_start') release_start?: string,
     @Query('realease_end') release_end?: string,
@@ -51,27 +58,37 @@ export class RevenuesController {
       due_end,
       paid,
       category_id,
+      user_id: req.user.id,
     });
 
     return { msg: 'Receitas encontradas com sucesso!', revenues };
   }
 
+  @UseGuards(AuthGuard)
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    const revenue = await this.revenuesService.findOne(id);
+  async findOne(@Param('id') id: string, @Request() req) {
+    const revenue = await this.revenuesService.findOne(id, req.user.id);
 
     return { msg: 'ok', revenue };
   }
 
+  @UseGuards(AuthGuard)
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() data: UpdateRevenueDto) {
-    const revenue = await this.revenuesService.update(id, data);
+  async update(
+    @Param('id') id: string,
+    @Body() data: UpdateRevenueDto,
+    @Request() req,
+  ) {
+    const revenue = await this.revenuesService.update(id, req.user.id, data);
 
     return { msg: 'Alteração feita com sucesso!', revenue };
   }
 
+  @UseGuards(AuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.revenuesService.remove(+id);
+  async remove(@Param('id') id: string, @Request() req) {
+    const revenue = await this.revenuesService.remove(id, req.user.id);
+
+    return { msg: 'Category removida com sucesso!', revenue };
   }
 }
